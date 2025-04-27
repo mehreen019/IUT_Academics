@@ -1,0 +1,5 @@
+PID	Allocation_R1	Allocation_R2	Allocation_R3	Max_R1	Max_R2	Max_R3	Available_R1	Available_R2	Available_R3	Need_R1	Need_R2	Need_R3
+P1	0	1	0	7	5	3	3	3	2	7	4	3
+P2	2	0	0	3	2	2	-	-	-	1	2	2
+P3	3	0	2	9	0	2	-	-	-	6	0	0
+P4	2	1	1	2	2	2	-	-	-	0	1	1
