@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.HelloController">
+   <children>
+      <Button layoutX="237.0" layoutY="264.0" mnemonicParsing="false" onAction="#submit" prefHeight="44.0" prefWidth="126.0" text="SUBMIT" />
+      <Button layoutX="129.0" layoutY="175.0" mnemonicParsing="false" onAction="#onRclick" prefHeight="36.0" prefWidth="78.0" text="R" />
+      <Button layoutX="256.0" layoutY="175.0" mnemonicParsing="false" onAction="#onCclick" prefHeight="36.0" prefWidth="88.0" text="C" />
+      <Button layoutX="389.0" layoutY="175.0" mnemonicParsing="false" onAction="#onAclick" prefHeight="36.0" prefWidth="78.0" text="A" />
+      <Label layoutX="130.0" layoutY="61.0" prefHeight="66.0" prefWidth="376.0" text="INSTRUCTIONS: FIND THE SCRAMBLED WORD!!" textAlignment="CENTER">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
