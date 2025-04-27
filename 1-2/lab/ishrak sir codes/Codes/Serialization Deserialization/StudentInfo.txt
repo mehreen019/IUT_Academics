@@ -1,0 +1,3 @@
+Name: StdA
+ID: 210041999
+CGPA: 3.89

@@ -1,0 +1,43 @@
+Count: 6
+Type: 1
+Amount: 600
+Month: 10
+Tag: Donation
+Description: Donated to C Programming Society
+
+
+Type: 0
+Amount: 200
+Month: 11
+Tag: Salary
+Description: Got salary
+
+
+Type: 0
+Amount: 250
+Month: 11
+Tag: Salary
+Description: Got Salary
+
+
+Type: 0
+Amount: 50
+Month: 12
+Tag: Others
+Description: Obtained some extra cash from a secret source
+
+
+Type: 1
+Amount: 100
+Month: 12
+Tag: Food
+Description: Ate at Hello Pizza
+
+
+Type: 0
+Amount: 200
+Month: 12
+Tag: Salary
+Description: Got Salary
+
+
