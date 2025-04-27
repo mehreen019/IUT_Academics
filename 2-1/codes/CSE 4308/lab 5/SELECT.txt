@@ -1,0 +1,177 @@
+SELECT
+    c.customer_name,
+    c.customer_city
+FROM
+    customer c
+    JOIN borrower b ON c.customer_name = b.customer_name
+    LEFT JOIN depositor d ON c.customer_name = d.customer_name
+WHERE
+    d.customer_name IS NULL;
+
+SELECT
+    DISTINCT c.customer_name
+FROM
+    customer c
+    JOIN depositor d ON d.customer_name = c.customer_name
+    JOIN account a ON d.account_number = a.account_number
+    JOIN borrower b ON b.customer_name = c.customer_name
+    JOIN loan l ON l.loan_number = b.loan_number;
+
+SELECT
+    TO_CHAR(
+        TO_DATE(acc_opening_date, 'DD-Mon-YYYY'),
+        'MONTH'
+    ) month,
+    COUNT(*) AS ACCOUNTS
+FROM
+    account a
+GROUP BY
+    TO_CHAR(
+        TO_DATE(acc_opening_date, 'DD-Mon-YYYY'),
+        'MONTH'
+    )
+ORDER BY
+    TO_CHAR(
+        TO_DATE(acc_opening_date, 'DD-Mon-YYYY'),
+        'MONTH'
+    );
+
+
+SELECT
+    TO_CHAR(
+        TO_DATE(a.acc_opening_date, 'DD-Mon-YYYY'),
+        'MONTH'
+    ) ACCOUNT_OPENING_DATE,
+    TO_CHAR(TO_DATE(l.loan_date, 'DD-Mon-YYYY'), 'MONTH') LOAN_DATE
+FROM
+    customer c
+    JOIN depositor d ON d.customer_name = c.customer_name
+    JOIN account a ON a.account_number = d.account_number
+    JOIN borrower b ON b.customer_name = c.customer_name
+    JOIN loan l ON l.loan_number = b.loan_number
+WHERE
+    c.customer_name = 'Smith';
+
+SELECT
+    *
+FROM
+    (
+        SELECT
+            c.customer_name,
+            SUM(a.balance) AS Total_balance
+        FROM
+            account a
+            JOIN depositor d ON a.account_number = d.account_number
+            JOIN customer c ON c.customer_name = d.customer_name
+        GROUP BY
+            c.customer_name
+        ORDER BY
+            SUM(a.balance) DESC
+    )
+WHERE
+    ROWNUM = 1;
+
+SELECT
+    c.customer_name || ' Eligible' As Eligibility
+FROM
+    customer c
+    JOIN borrower b ON b.customer_name = c.customer_name
+    JOIN depositor d ON d.customer_name = c.customer_name
+    JOIN account a ON a.account_number = d.account_number
+    JOIN loan l ON l.loan_number = b.loan_number
+    GROUP BY c.customer_name
+    HAVING SUM(a.balance) >= MIN(l.amount);
+
+SELECT 
+    CASE
+        WHEN SUM(a.balance) > AVG(a.balance) + 500 THEN br.branch_name || ' Eite'
+        WHEN SUM(a.balance) <= AVG(a.balance) + 500 AND SUM(a.balance) >= AVG(a.balance) - 500 THEN br.branch_name || ' Moderate'
+        ELSE br.branch_name || ' Poor'
+    END AS Status
+FROM branch br
+JOIN account a ON a.branch_name = br.branch_name
+GROUP BY br.branch_name;
+
+SELECT DISTINCT br.branch_city FROM branch br
+JOIN customer c ON c.customer_city = br.branch_city
+LEFT JOIN borrower b on b.customer_name = c.customer_name
+LEFT JOIN depositor d ON c.customer_name = d.customer_name
+WHERE d.customer_name IS NULL AND b.loan_number IS NULL;
+
+
+drop table customer_new cascade constraints;
+CREATE TABLE customer_new AS SELECT * FROM customer WHERE customer.customer_name IS NULL;
+
+
+INSERT INTO customer_new
+SELECT c.* FROM customer c
+LEFT JOIN depositor d ON d.customer_name = c.customer_name
+LEFT JOIN borrower b ON b.customer_name = c.customer_name
+WHERE b.customer_name IS NULL OR d.customer_name IS NULL;
+
+
+ALTER TABLE customer_new ADD Status varchar2(15);
+
+
+SELECT c.customer_name, 
+    CASE
+        WHEN SUM(NVL(a.balance, 0)) > SUM(NVL(l.amount, 0)) THEN 'In Savings'
+        WHEN SUM(a.balance) = SUM(l.amount) THEN 'In Breakeven'
+        ELSE 'In Loan'
+    END AS Status
+FROM customer c
+LEFT JOIN depositor d ON d.customer_name = c.customer_name
+LEFT JOIN account a ON a.account_number = d.account_number
+LEFT JOIN borrower b ON b.customer_name = c.customer_name
+LEFT JOIN loan l ON l.loan_number = b.loan_number
+GROUP BY c.customer_name;
+
+//
+
+DROP TABLE NEW_CUSTOMER;
+CREATE TABLE NEW_CUSTOMER AS
+SELECT * FROM CUSTOMER
+WHERE 1 = 2;
+
+INSERT INTO NEW_CUSTOMER
+(SELECT C.CUSTOMER_NAME, C.CUSTOMER_STREET, C.CUSTOMER_CITY
+FROM CUSTOMER C
+JOIN BORROWER B ON B.CUSTOMER_NAME = C.CUSTOMER_NAME)
+UNION
+(SELECT C.CUSTOMER_NAME, C.CUSTOMER_STREET, C.CUSTOMER_CITY
+FROM CUSTOMER C
+JOIN DEPOSITOR D ON D.CUSTOMER_NAME = C.CUSTOMER_NAME);
+
+ALTER TABLE NEW_CUSTOMER ADD STATUS VARCHAR2(15);
+
+UPDATE NEW_CUSTOMER
+SET STATUS = CASE
+WHEN CUSTOMER_NAME IN
+(
+SELECT DISTINCT C.CUSTOMER_NAME AS NAMES
+FROM CUSTOMER C
+JOIN DEPOSITOR D ON C.CUSTOMER_NAME = D.CUSTOMER_NAME
+JOIN BORROWER B ON B.CUSTOMER_NAME = C.CUSTOMER_NAME
+JOIN
+( SELECT ACCOUNT_NUMBER, SUM(BALANCE) AS TOTAL
+FROM ACCOUNT
+GROUP BY ACCOUNT_NUMBER
+) TEMP ON TEMP.ACCOUNT_NUMBER = D.ACCOUNT_NUMBER
+JOIN LOAN L ON L.AMOUNT <= TEMP.TOTAL
+) THEN 'IN SAVINGS'
+WHEN CUSTOMER_NAME IN
+(
+SELECT DISTINCT C.CUSTOMER_NAME AS NAMES
+FROM CUSTOMER C
+JOIN DEPOSITOR D ON C.CUSTOMER_NAME = D.CUSTOMER_NAME
+JOIN BORROWER B ON B.CUSTOMER_NAME = C.CUSTOMER_NAME
+JOIN
+(
+SELECT ACCOUNT_NUMBER, SUM(BALANCE) AS TOTAL
+FROM ACCOUNT
+GROUP BY ACCOUNT_NUMBER
+) TEMP ON TEMP.ACCOUNT_NUMBER = D.ACCOUNT_NUMBER
+JOIN LOAN L ON L.AMOUNT = TEMP.TOTAL
+) THEN 'BREAKEVEN'
+ELSE 'IN LOAN'
+END;

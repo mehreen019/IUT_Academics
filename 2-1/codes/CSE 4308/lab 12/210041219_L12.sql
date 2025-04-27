@@ -1,0 +1,145 @@
+SET SERVEROUTPUT ON SIZE 1000000
+
+/* creating banking schema */
+
+DROP TABLE ACCOUNT CASCADE CONSTRAINTS;
+DROP TABLE BALANCE CASCADE CONSTRAINTS;
+DROP TABLE TRANSACTION CASCADE CONSTRAINTS;
+DROP TABLE ACC_PROPERTY CASCADE CONSTRAINTS;
+
+CREATE TABLE ACC_PROPERTY
+(
+    acc_id integer primary key,
+    name varchar2(20),
+    profit_rate number,
+    grace int
+);
+
+CREATE TABLE ACCOUNT
+(
+    acc_id integer primary key,
+    NAME VARCHAR2(20),
+    acc_code integer,
+    op_date timestamp,
+    lastdateinterest timestamp,
+    CONSTRAINT fk_acc FOREIGN KEY(acc_code) REFERENCES ACC_PROPERTY(acc_id)
+);
+
+CREATE TABLE BALANCE
+(
+    acc_no integer primary key,
+    principal_amount number,
+    profit_amount number,
+    CONSTRAINT fk_balance FOREIGN KEY(acc_no) REFERENCES ACCOUNT(acc_id)
+);
+
+CREATE TABLE TRANSACTION
+(
+    tid integer primary key,
+    acc_no integer,
+    amount number,
+    transaction_date timestamp,
+    CONSTRAINT fk_trans FOREIGN KEY(acc_no) REFERENCES ACCOUNT(acc_id)
+);
+
+
+INSERT INTO ACC_PROPERTY VALUES(2001, 'monthly', 2.4, 1);
+INSERT INTO ACCOUNT VALUES(202, 'Jack', 2001, TO_DATE('1998-01-23 05:34:45', 'YYYY-MM-DD HH:MI:SS'), TO_DATE('2003-01-23 05:34:45', 'YYYY-MM-DD HH:MI:SS'));
+INSERT INTO BALANCE VALUES(202, 2345, 232);
+INSERT INTO TRANSACTION VALUES(677332, 202, 23455, TO_DATE('2013-06-12 08:09:45', 'YYYY-MM-DD HH:MI:SS'));
+
+
+--1
+
+CREATE SEQUENCE ACC_SERIAL
+start with 100000
+increment by 1
+minvalue 100000
+maxvalue 999999
+cache 10;
+
+CREATE OR REPLACE FUNCTION GENERATE_AID(acc_code varchar2, op_date date, name varchar2)
+RETURN VARCHAR2
+IS
+    aid varchar2(30);
+BEGIN
+    aid:= acc_code || TO_CHAR(op_date, 'YYYYMMDD' ) || '.' || substr(name,1,3) || '.' || ACC_SERIAL.NEXTVAL; 
+
+RETURN aid;
+END ;
+/
+
+DECLARE
+    acc_code varchar2(5);
+    op_date date;
+    name varchar2(20);
+BEGIN
+    SELECT a.name, a.acc_code, a.op_date
+    into name, acc_code, op_date
+    from ACCOUNT A
+    where rownum=1;
+
+    DBMS_OUTPUT.PUT_LINE ( GENERATE_AID(acc_code, op_date, name) );
+END ;
+/
+
+--2
+
+ALTER TABLE TRANSACTION DROP CONSTRAINT fk_trans;
+ALTER TABLE TRANSACTION DROP COLUMN acc_no;
+ALTER TABLE BALANCE DROP CONSTRAINT fk_balance;
+ALTER TABLE BALANCE DROP COLUMN acc_no;
+ALTER TABLE ACCOUNT DROP COLUMN acc_id;
+DELETE FROM BALANCE;
+DELETE FROM TRANSACTION;
+DELETE FROM ACCOUNT;
+
+ALTER TABLE ACCOUNT ADD acc_id varchar2(30) NOT NULL;
+ALTER TABLE ACCOUNT ADD CONSTRAINT PK_ACC PRIMARY KEY(acc_id);
+ALTER TABLE BALANCE ADD acc_no varchar2(30) NOT NULL;
+ALTER TABLE BALANCE ADD CONSTRAINT PK_BAL PRIMARY KEY(acc_no);
+ALTER TABLE BALANCE ADD CONSTRAINT FK_BAL FOREIGN KEY(acc_no) REFERENCES ACCOUNT(acc_id);
+ALTER TABLE TRANSACTION ADD acc_no varchar2(30);
+ALTER TABLE TRANSACTION ADD CONSTRAINT fk_trans FOREIGN KEY(acc_no) REFERENCES ACCOUNT(acc_id);
+
+--3
+
+CREATE OR REPLACE TRIGGER aid_trigger
+BEFORE INSERT ON ACCOUNT
+FOR EACH ROW
+BEGIN
+:NEW.acc_id := GENERATE_AID(:NEW.acc_code, :NEW.op_date, :NEW.name);
+END ;
+/
+
+INSERT INTO ACCOUNT VALUES('Jack', 2001, TO_DATE('1998-01-23 05:34:45', 'YYYY-MM-DD HH:MI:SS'), TO_DATE('2003-01-23 05:34:45', 'YYYY-MM-DD HH:MI:SS'), '34');
+SELECT acc_id FROM ACCOUNT;
+
+--4
+
+CREATE OR REPLACE TRIGGER balance_trigger
+AFTER INSERT ON ACCOUNT
+FOR EACH ROW
+BEGIN
+INSERT INTO BALANCE VALUES(5000, 0, :NEW.acc_id);
+END ;
+/
+
+INSERT INTO ACC_PROPERTY VALUES(2005, 'quarterly', 6.1, 4);
+INSERT INTO ACCOUNT VALUES('crawford', 2005, TO_DATE('1998-01-23 05:34:45', 'YYYY-MM-DD HH:MI:SS'), TO_DATE('2003-01-23 05:34:45', 'YYYY-MM-DD HH:MI:SS'), '34');
+SELECT acc_no, principal_amount, profit_amount FROM BALANCE;
+
+--5
+
+CREATE OR REPLACE TRIGGER transaction_trigger
+AFTER INSERT ON TRANSACTION
+FOR EACH ROW
+BEGIN
+UPDATE BALANCE
+SET principal_amount = principal_amount+ :NEW.amount
+WHERE acc_no = :NEW.acc_no;
+END ;
+/
+
+INSERT INTO TRANSACTION VALUES(677332, 23455, TO_DATE('2013-06-12 08:09:45', 'YYYY-MM-DD HH:MI:SS'), '200519980123.cra.100009');
+SELECT acc_no, principal_amount, profit_amount FROM BALANCE;

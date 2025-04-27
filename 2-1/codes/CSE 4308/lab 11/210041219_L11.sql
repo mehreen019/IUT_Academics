@@ -1,0 +1,220 @@
+SET SERVEROUTPUT ON SIZE 1000000
+--1
+
+CREATE OR REPLACE PROCEDURE MOVTIME(GT IN VARCHAR2)
+AS
+    tot_time number;
+    M number:=0;
+    H number:=0;
+BEGIN
+    SELECT MOV_TIME
+    INTO tot_time
+    FROM MOVIE
+    WHERE MOV_TITLE=GT;
+
+    M:=mod(tot_time,70);
+    IF(M>30) THEN TOT_TIME:=TOT_TIME+15;
+    END IF;
+    H:=floor(TOT_TIME/60);
+
+    DBMS_OUTPUT.PUT_LINE( H || ' hours ' || MOD(TOT_TIME,60) || 'minutes');
+END ;
+/
+
+BEGIN
+MOVTIME('Annie Hall');
+END;
+/
+
+--2
+
+CREATE OR REPLACE PROCEDURE HIGHEST_MOV(N IN integer)
+AS
+    title VARCHAR2(50);
+    CURSOR mov_cur 
+    IS 
+        SELECT MOV_TITLE
+        FROM MOVIE M, (
+        SELECT MOV_ID
+        FROM RATING
+        GROUP BY MOV_ID
+        HAVING AVG(REV_STARS) > (
+            SELECT AVG(REV_STARS)
+            FROM RATING
+        ) ) R
+        WHERE R.MOV_ID = M.MOV_ID AND rownum<=7;
+
+BEGIN
+    OPEN mov_cur;
+    DBMS_OUTPUT.PUT_LINE('TITLE');
+    LOOP
+        FETCH mov_cur INTO title;
+        EXIT WHEN mov_cur%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(title);
+    END LOOP;
+    CLOSE mov_cur;
+END;
+/
+
+BEGIN 
+HIGHEST_MOV(10);
+END;
+/
+/*SELECT MOV_TITLE
+FROM MOVIE M, (
+        SELECT MOV_ID
+        FROM RATING
+        GROUP BY MOV_ID
+        HAVING AVG(REV_STARS) > (
+            SELECT AVG(REV_STARS)
+            FROM RATING
+        ) ) R
+WHERE R.MOV_ID = M.MOV_ID;*/
+
+--3
+
+CREATE OR REPLACE FUNCTION MOVIE_EARNING(MN IN VARCHAR2)
+RETURN NUMBER
+IS
+    title VARCHAR2(50);
+    TOT_EARN number:=0;
+    Y number;
+    COU number;
+BEGIN
+    SELECT floor(MONTHS_BETWEEN(sysdate, M.mov_releasedate)/12) AS YEARS_SINCE, R.STARS, M.MOV_TITLE
+    INTO Y, COU, TITLE
+        FROM MOVIE M,
+        (SELECT COUNT(REV_ID) AS STARS, MOV_ID
+        FROM RATING
+        GROUP BY MOV_ID
+        HAVING AVG(REV_STARS)>=6) R
+        WHERE M.MOV_ID=R.MOV_ID AND M.MOV_TITLE=MN;
+        
+    TOT_EARN:=(COU*10)/Y;
+
+RETURN TOT_EARN;
+END;
+/
+
+BEGIN 
+DBMS_OUTPUT.PUT_LINE(MOVIE_EARNING('Annie Hall'));
+END;
+/
+
+/*SELECT floor(MONTHS_BETWEEN(sysdate, M.mov_releasedate)/12) AS YEARS_SINCE, R.STARS, M.MOV_TITLE
+FROM MOVIE M,
+(SELECT COUNT(REV_ID) AS STARS, MOV_ID
+FROM RATING
+GROUP BY MOV_ID
+HAVING AVG(REV_STARS)>=6) R
+WHERE M.MOV_ID=R.MOV_ID;*/
+
+
+--4
+
+CREATE OR REPLACE FUNCTION GEN_STATUS(ID IN NUMBER, Rev_ST OUT NUMBER, REV_COU OUT NUMBER)
+RETURN VARCHAR2
+IS
+    gs varchar2(20);
+    st number;
+    cou number;
+
+    allst number;
+    allcou number;
+BEGIN
+    SELECT AVG(R.REV_STARS), COUNT(R.REV_ID)
+    INTO st, cou
+    FROM MTYPE G JOIN RATING R ON R.MOV_ID=G.MOV_ID AND G.GEN_ID=ID
+    GROUP BY G.GEN_ID;
+
+    SELECT AVG(RS), AVG(RC)
+    INTO allst, allcou
+    FROM (
+    SELECT AVG(R.REV_STARS) AS RS, COUNT(R.REV_ID) AS RC
+    FROM MTYPE G JOIN RATING R ON R.MOV_ID=G.MOV_ID
+    GROUP BY G.GEN_ID);
+
+    IF(cou>allcou AND st<allst) THEN gs:='Widely Watched';
+    ELSIF(cou<allcou AND st>allst) THEN gs:='Highly Rated';
+    ELSIF(cou>allcou AND st>allst) THEN gs:='Peoples favorite';
+    ELSE gs:='so so';
+    END IF;
+
+    REV_ST:=ST;
+    REV_COU:=COU;
+
+RETURN gs;
+END ;
+/
+
+DECLARE
+REV_ST NUMBER;
+REV_COU NUMBER;
+BEGIN
+DBMS_OUTPUT.PUT_LINE(GEN_STATUS(1002,REV_ST, REV_COU));
+DBMS_OUTPUT.PUT_LINE('REVIEW STARS '|| REV_ST);
+DBMS_OUTPUT.PUT_LINE('REVIEW COUNT '|| REV_COU);
+END;
+/
+
+/*SELECT AVG(R.REV_STARS), COUNT(R.REV_ID)
+FROM MTYPE G JOIN RATING R ON R.MOV_ID=G.MOV_ID AND G.GEN_ID=1013
+GROUP BY G.GEN_ID;
+
+SELECT AVG(RS), AVG(RC)
+FROM (
+SELECT AVG(R.REV_STARS) AS RS, COUNT(R.REV_ID) AS RC
+FROM MTYPE G JOIN RATING R ON R.MOV_ID=G.MOV_ID
+GROUP BY G.GEN_ID);*/
+
+--5
+
+CREATE OR REPLACE FUNCTION MOVIE_BETWEEN_DATES(fst_date in varchar2, sc_date in VARCHAR2, mov_c out number)
+RETURN VARCHAR2
+IS
+    gt varchar2(20);
+    cou number;
+
+BEGIN
+    
+    SELECT G.GEN_TITLE, R.MOVIE_COUNT
+    INTO gt, cou
+    FROM(
+    SELECT G.GEN_ID, COUNT(M.MOV_ID) AS MOVIE_COUNT
+    FROM MTYPE MT JOIN 
+    (select MM.MOV_ID
+    from movie MM
+    WHERE MM.mov_releasedate BETWEEN TO_DATE(fst_date, 'DD/MM/YYYY') AND TO_DATE(sc_date, 'DD/MM/YYYY')) M ON MT.MOV_ID=M.MOV_ID JOIN GENRES G ON G.GEN_ID=MT.GEN_ID
+    GROUP BY G.GEN_ID
+    ORDER BY COUNT(M.MOV_ID) desc) R, GENRES G
+    WHERE G.GEN_ID=R.GEN_ID AND rownum=1;
+
+    mov_c:=cou;
+
+RETURN gt;
+END ;
+/
+
+DECLARE
+mov_c number;
+BEGIN
+DBMS_OUTPUT.PUT_LINE(MOVIE_BETWEEN_DATES('19/02/1955','10/07/1995', mov_c));
+DBMS_OUTPUT.PUT_LINE('movie count: '||mov_c);
+END;
+/
+
+/*SELECT G.GEN_TITLE, R.MOVIE_COUNT
+FROM(
+SELECT G.GEN_ID, COUNT(M.MOV_ID) AS MOVIE_COUNT
+FROM MTYPE MT JOIN 
+(select MM.MOV_ID
+from movie MM
+WHERE MM.mov_releasedate BETWEEN TO_DATE('28/02/1950', 'DD/MM/YYYY') AND TO_DATE('20/06/1970', 'DD/MM/YYYY')) M ON MT.MOV_ID=M.MOV_ID JOIN GENRES G ON G.GEN_ID=MT.GEN_ID
+GROUP BY G.GEN_ID
+ORDER BY COUNT(M.MOV_ID) desc) R, GENRES G
+WHERE G.GEN_ID=R.GEN_ID AND rownum=1;
+
+
+select M.mov_releasedate AS releasedate
+from movie M 
+WHERE M.mov_releasedate BETWEEN TO_DATE('28/02/1950', 'DD/MM/YYYY') AND TO_DATE('20/06/1970', 'DD/MM/YYYY');*/
