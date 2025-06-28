@@ -1,0 +1,153 @@
+\usepackage[a4paper,
+    top=.8in, bottom=.8in,
+    right=0.8in,left=.8in,
+    footskip=36pt,
+    heightrounded, showframe=false]{geometry}
+
+\usepackage{ragged2e}
+\usepackage{amsmath}
+
+\usepackage{booktabs}
+
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+%\usepackage[notextcomp]{stix2}
+%\usepackage{courier}
+
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{gensymb}
+\usepackage{multicol}
+
+% Table Modifier
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% Table Modifier
+%Array%
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usetikzlibrary{calc, arrows, quotes}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13, axis line style=thick}
+\tikzstyle{arrow} = [thick,->,>=stealth]
+%Array%
+%\usepackage[paperheight=30cm,paperwidth=21cm,top=.8in, bottom=.75in,right=0.9in,left=.4in, heightrounded,showframe=false]{geometry}
+
+
+% Spacing before and after align
+\usepackage{etoolbox}
+\newcommand{\zerodisplayskips}{%
+  \setlength{\abovedisplayskip}{3pt}%
+  \setlength{\belowdisplayskip}{3pt}%
+  \setlength{\abovedisplayshortskip}{3pt}%
+  \setlength{\belowdisplayshortskip}{3pt}}
+\appto{\normalsize}{\zerodisplayskips}
+\appto{\small}{\zerodisplayskips}
+\appto{\footnotesize}{\zerodisplayskips}
+
+ 
+ \usepackage{graphicx}
+ \usepackage{amsmath}
+ \usepackage{mathtools, nccmath}
+
+
+
+ %\usepackage{hyperref}
+
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true, linkcolor=black,urlcolor=blue}
+
+% for enabling hyper references in pdf.
+
+
+
+%\usepackage{enumerate}
+
+\usepackage{enumitem}
+\usepackage{multirow}
+
+%\end{comment}
+
+
+
+%--------CODE LISTING--------
+\usepackage{xcolor}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{azure}{rgb}{0.94, 1.0, 1.0}
+\definecolor{aliceblue}{rgb}{0.94, 0.97, 1.0}
+\definecolor{islamicgreen}{rgb}{0.0, 0.56, 0.0}
+\definecolor{pacmanyellow}{rgb}{1, 0.90, 0.22}
+\definecolor{pinklace}{rgb}{1, 0.72, 1}
+\definecolor{cobalt}{rgb}{0.0, 0.28, 0.67}
+\definecolor{darkblue}{RGB}{0, 51, 153}
+
+\usepackage{listings}
+
+\usepackage{soul}
+\setul{4pt}{1pt} % first one space between text and line, 2nd one is thickness
+
+
+%%%%%%%%%%%%%%%%%%%   Stylr used in this report %%%%%%%%%%%%%%%%%%
+
+
+% Packages
+\usepackage{graphicx} % For including and manipulating images
+\usepackage[utf8]{inputenc} % To input and handle from UTF-8 character set
+\usepackage[T1]{fontenc} % For the use of accented letters or special symbols
+\usepackage{mathptmx} % For the font times new roman
+\usepackage[absolute]{textpos} % To position text or other elements at absolute coordinates on the page
+\usepackage{lipsum} % For generating dummy text
+\usepackage{fancyhdr} % For custom headers and footers
+\usepackage{titlesec} % For custom section and chapter titles
+\usepackage{tikz} %  provides a wide range of graphical capabilities.
+
+
+
+% custom Page style
+\pagestyle{fancy}
+\fancyhf{} % Clear default header and footer
+\setlength{\headheight}{14.5pt}
+% Custom Header
+\fancyhead[R]{\thepage} % Right portion of the header contains page number
+\fancyhead[L]{\nouppercase\leftmark} % Left portion of the header contains chapter/section name
+\renewcommand{\headrulewidth}{0.01pt} % Thickness of the header rule line
+% Custom Footer
+\fancyfoot[R]{\StudentID} % Right portion of the footer contains student ID
+\fancyfoot[C]{Lab \LabNo} % Center portion of the footer contains lab number
+\fancyfoot[L]{CSE 4512} % Left portion of the footer contains course code
+\renewcommand{\footrulewidth}{0.01pt} % Thickness of the footer rule line
+
+% Update the \chaptermark command
+\makeatletter
+\renewcommand{\chaptermark}[1]{%
+    \markboth{Task \thechapter:\ \MakeUppercase{#1}}{}%
+}
+\makeatother
+
+
+% Custom \task command
+\newcounter{taskcounter}
+\newcommand{\task}{\stepcounter{taskcounter}\chapter}
+\renewcommand{\thechapter}{\arabic{taskcounter}}
+
+% Modify chapter command
+\makeatletter
+\let\oldchapter\chapter
+\renewcommand{\chapter}{\@ifstar\chap@starchapter\chap@chapter}
+\newcommand{\chap@starchapter}{\newpage\thispagestyle{fancy}\oldchapter*}
+\newcommand{\chap@chapter}[1]{\newpage\thispagestyle{fancy}\oldchapter{#1}\thispagestyle{fancy}}
+\makeatother
+
+% Custom section and chapter titles
+\titleformat{\chapter}[block]{\centering\normalfont\Large\bfseries}{Task\ \thechapter:}{12pt}{\Large}
+\titlespacing*{\chapter}{0pt}{-30pt}{40pt}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}

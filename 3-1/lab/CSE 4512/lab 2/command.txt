@@ -1,0 +1,3 @@
+? - pulls up all commands
+config ? - pulls up all commands related to config
+fwd in realtime - dissolves the console

@@ -1,0 +1,10 @@
+encapsulation dot1q 10
+switchport mode access/trunk
+switchport access vlan 20
+switchport trunk encapsulation dot1q
+switchport trunk native vlan 
+switchport trunk allowed vlan 
+show vlan brief
+show int trunk
+show ipv6 interface brief
+no ip domain-lookup
