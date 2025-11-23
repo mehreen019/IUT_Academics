@@ -1,0 +1,22 @@
+< THE SYMBOL TABLE >  lab6code.bin  --  emu8086 assembler version: 4.08 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+DATA                     	00000     	-5        	SEGMENT   	(ITSELF)  
+CODE                     	00000     	-5        	SEGMENT   	(ITSELF)  
+START                    	00000     	-1        	LABEL     	CODE      
+XX                       	00008     	-1        	LABEL     	CODE      
+DELAY0                   	00011     	-1        	LABEL     	CODE      
+DELAY1                   	0001C     	-1        	LABEL     	CODE      
+DELAY2                   	00027     	-1        	LABEL     	CODE      
+DELAY3                   	00032     	-1        	LABEL     	CODE      
+DELAY4                   	0003D     	-1        	LABEL     	CODE      
+DELAY5                   	00048     	-1        	LABEL     	CODE      
+DELAY6                   	00053     	-1        	LABEL     	CODE      
+DELAY7                   	0005E     	-1        	LABEL     	CODE      
+DELAY8                   	00069     	-1        	LABEL     	CODE      
+DELAY9                   	00074     	-1        	LABEL     	CODE      
+===================================================================================================
+[ 8/15/2025  --  9:18:24 AM ] 
+< END >
+ 

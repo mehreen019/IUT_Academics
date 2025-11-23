@@ -1,0 +1,157 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+labfinal5.bin -- emu8086 assembler version: 4.08  
+ 
+[ 8/28/2025  --  6:07:54 PM ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       ORG 0000H
+[   2]        :                                       ; ----- Port definitions -----
+[   3]        :                                       PORTA   EQU 00H    ; units (rightmost digit)
+[   4]        :                                       PORTB   EQU 02H    ; tens (middle digit)
+[   5]        :                                       PORTC   EQU 04H    ; hundreds (leftmost digit)
+[   6]        :                                       PORT_CON EQU 06H   ; control port
+[   7]        :                                       ; ----- 7-seg patterns for digits 0-9 (immediates) -----
+[   8]        :                                       PAT0    EQU 00111111B
+[   9]        :                                       PAT1    EQU 00000110B
+[  10]        :                                       PAT2    EQU 01011011B
+[  11]        :                                       PAT3    EQU 01001111B
+[  12]        :                                       PAT4    EQU 01100110B
+[  13]        :                                       PAT5    EQU 01101101B
+[  14]        :                                       PAT6    EQU 01111101B
+[  15]        :                                       PAT7    EQU 00000111B
+[  16]        :                                       PAT8    EQU 01111111B
+[  17]        :                                       PAT9    EQU 01101111B
+[  18]        :                                       ; ----- Start -----
+[  19]    0000:                                       START:
+[  20]    0000: BA 06 00                              MOV DX, PORT_CON
+[  21]    0003: B0 80                                 MOV AL, 10000000B
+[  22]    0005: EE                                    OUT DX, AL
+[  23]        :                                       
+[  24]        :                                       ; Initialize counter to 999 using DI register
+[  25]    0006: BF E7 03                              MOV DI, 999
+[  26]        :                                       
+[  27]    0009:                                       MAIN_LOOP:
+[  28]        :                                       ; Extract hundreds digit from DI
+[  29]    0009: 8B C7                                 MOV AX, DI          ; Copy counter to AX
+[  30]    000B: BB 64 00                              MOV BX, 100         ; Divisor for hundreds
+[  31]    000E: BA 00 00                              MOV DX, 0           ; Clear DX for division
+[  32]    0011: F7 F3                                 DIV BX              ; AX = hundreds, DX = remainder
+[  33]    0013: 8A C8                                 MOV CL, AL          ; Store hundreds in CL
+[  34]        :                                       
+[  35]        :                                       ; Extract tens and units from remainder (DX)
+[  36]    0015: 8B C2                                 MOV AX, DX          ; Remainder contains tens and units
+[  37]    0017: BB 0A 00                              MOV BX, 10          ; Divisor for tens
+[  38]    001A: BA 00 00                              MOV DX, 0           ; Clear DX for division
+[  39]    001D: F7 F3                                 DIV BX              ; AX = tens, DX = units
+[  40]    001F: 8A D8                                 MOV BL, AL          ; Store tens in BL
+[  41]    0021: 8A FA                                 MOV BH, DL          ; Store units in BH
+[  42]        :                                       
+[  43]        :                                       ; Display units (BH)
+[  44]    0023: 8A C7                                 MOV AL, BH
+[  45]    0025: E8 24 00                              CALL SHOW_DIGIT
+[  46]    0028: BA 00 00                              MOV DX, PORTA
+[  47]    002B: EE                                    OUT DX, AL
+[  48]        :                                       
+[  49]        :                                       ; Display tens (BL)
+[  50]    002C: 8A C3                                 MOV AL, BL
+[  51]    002E: E8 1B 00                              CALL SHOW_DIGIT
+[  52]    0031: BA 02 00                              MOV DX, PORTB
+[  53]    0034: EE                                    OUT DX, AL
+[  54]        :                                       
+[  55]        :                                       ; Display hundreds (CL)
+[  56]    0035: 8A C1                                 MOV AL, CL
+[  57]    0037: E8 12 00                              CALL SHOW_DIGIT
+[  58]    003A: BA 04 00                              MOV DX, PORTC
+[  59]    003D: EE                                    OUT DX, AL
+[  60]        :                                       
+[  61]        :                                       ; Delay
+[  62]    003E: E8 54 00                              CALL DELAY
+[  63]        :                                       
+[  64]        :                                       ; Decrement counter
+[  65]    0041: 4F                                    DEC DI
+[  66]    0042: 83 FF FF                              CMP DI, 0FFFFH      ; Check if underflow (was 0, now 65535)
+[  67]    0045: 75 C2                                 JNE MAIN_LOOP       ; If not underflow, continue
+[  68]        :                                       
+[  69]        :                                       ; Reset to 999 and continue
+[  70]    0047: BF E7 03                              MOV DI, 999
+[  71]    004A: EB BD                                 JMP MAIN_LOOP
+[  72]        :                                       
+[  73]        :                                       ; -----------------------------
+[  74]        :                                       ; SHOW_DIGIT: AL = 0..9 -> AL = 7-seg pattern
+[  75]        :                                       ; -----------------------------
+[  76]    004C:                                       SHOW_DIGIT:
+[  77]    004C: 3C 00                                 CMP AL, 0
+[  78]    004E: 74 27                                 JE L0
+[  79]    0050: 3C 01                                 CMP AL, 1
+[  80]    0052: 74 26                                 JE L1
+[  81]    0054: 3C 02                                 CMP AL, 2
+[  82]    0056: 74 25                                 JE L2
+[  83]    0058: 3C 03                                 CMP AL, 3
+[  84]    005A: 74 24                                 JE L3
+[  85]    005C: 3C 04                                 CMP AL, 4
+[  86]    005E: 74 23                                 JE L4
+[  87]    0060: 3C 05                                 CMP AL, 5
+[  88]    0062: 74 22                                 JE L5
+[  89]    0064: 3C 06                                 CMP AL, 6
+[  90]    0066: 74 21                                 JE L6
+[  91]    0068: 3C 07                                 CMP AL, 7
+[  92]    006A: 74 20                                 JE L7
+[  93]    006C: 3C 08                                 CMP AL, 8
+[  94]    006E: 74 1F                                 JE L8
+[  95]    0070: 3C 09                                 CMP AL, 9
+[  96]    0072: 74 1E                                 JE L9
+[  97]        :                                       ; out-of-range — return blank
+[  98]    0074: B0 00                                 MOV AL, 00000000B
+[  99]    0076: C3                                    RET
+[ 100]    0077:                                       L0:
+[ 101]    0077: B0 3F                                 MOV AL, PAT0
+[ 102]    0079: C3                                    RET
+[ 103]    007A:                                       L1:
+[ 104]    007A: B0 06                                 MOV AL, PAT1
+[ 105]    007C: C3                                    RET
+[ 106]    007D:                                       L2:
+[ 107]    007D: B0 5B                                 MOV AL, PAT2
+[ 108]    007F: C3                                    RET
+[ 109]    0080:                                       L3:
+[ 110]    0080: B0 4F                                 MOV AL, PAT3
+[ 111]    0082: C3                                    RET
+[ 112]    0083:                                       L4:
+[ 113]    0083: B0 66                                 MOV AL, PAT4
+[ 114]    0085: C3                                    RET
+[ 115]    0086:                                       L5:
+[ 116]    0086: B0 6D                                 MOV AL, PAT5
+[ 117]    0088: C3                                    RET
+[ 118]    0089:                                       L6:
+[ 119]    0089: B0 7D                                 MOV AL, PAT6
+[ 120]    008B: C3                                    RET
+[ 121]    008C:                                       L7:
+[ 122]    008C: B0 07                                 MOV AL, PAT7
+[ 123]    008E: C3                                    RET
+[ 124]    008F:                                       L8:
+[ 125]    008F: B0 7F                                 MOV AL, PAT8
+[ 126]    0091: C3                                    RET
+[ 127]    0092:                                       L9:
+[ 128]    0092: B0 6F                                 MOV AL, PAT9
+[ 129]    0094: C3                                    RET
+[ 130]        :                                       ; -----------------------------
+[ 131]        :                                       ; DELAY: provides timing delay
+[ 132]        :                                       ; -----------------------------
+[ 133]    0095:                                       DELAY:
+[ 134]    0095: B9 00 80                              MOV CX, 08000H
+[ 135]    0098:                                       DELAY_LOOP:
+[ 136]    0098: E2 FE                                 LOOP DELAY_LOOP
+[ 137]    009A: C3                                    RET
+[ 138]        :                                       END
+[ 139]        :                                       
+ 
+===================================================================================================
+ 
+
+
+
+
+===================================================================================================

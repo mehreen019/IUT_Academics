@@ -1,0 +1,23 @@
+< THE SYMBOL TABLE >  labfinalbackup.bin  --  emu8086 assembler version: 4.08 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+START                    	00000     	-1        	LABEL     	(NOSEG)   
+MAIN_LOOP                	00009     	-1        	LABEL     	(NOSEG)   
+SHOW_DIGIT               	00049     	-1        	LABEL     	(NOSEG)   
+L0                       	00074     	-1        	LABEL     	(NOSEG)   
+L1                       	00077     	-1        	LABEL     	(NOSEG)   
+L2                       	0007A     	-1        	LABEL     	(NOSEG)   
+L3                       	0007D     	-1        	LABEL     	(NOSEG)   
+L4                       	00080     	-1        	LABEL     	(NOSEG)   
+L5                       	00083     	-1        	LABEL     	(NOSEG)   
+L6                       	00086     	-1        	LABEL     	(NOSEG)   
+L7                       	00089     	-1        	LABEL     	(NOSEG)   
+L8                       	0008C     	-1        	LABEL     	(NOSEG)   
+L9                       	0008F     	-1        	LABEL     	(NOSEG)   
+DELAY                    	00092     	-1        	LABEL     	(NOSEG)   
+DELAY_LOOP               	00095     	-1        	LABEL     	(NOSEG)   
+===================================================================================================
+[ 9/3/2025  --  2:39:08 PM ] 
+< END >
+ 

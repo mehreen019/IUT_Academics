@@ -1,0 +1,211 @@
+version 2
+run T3_Wireless_Sat_Sweep-0-20250823-13:56:39-3085
+attr configname T3_Wireless_Sat_Sweep
+attr datetime 20250823-13:56:39
+attr experiment T3_Wireless_Sat_Sweep
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network WiredAndWirelessHostsWithAP
+attr processid 3085
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 210041223
+param **.*Host[*].app[*].sendInterval 0.909091s
+param WiredAndWirelessHostsWithAP.num_wired 0
+param WiredAndWirelessHostsWithAP.num_wireless 350
+param **.*Host[*].app[*].messageLength 100B
+param **.*Host[*].app[*].sendInterval 1s
+param **.bitrate 2Mbps
+param **.wlan*.bitrate 2Mbps
+param **.eth[*].bitrate 2Mbps
+param **.constraintAreaMinX 0m
+param **.constraintAreaMinY 0m
+param **.constraintAreaMinZ 0m
+param **.constraintAreaMaxX 400m
+param **.constraintAreaMaxY 400m
+param **.constraintAreaMaxZ 0m
+param **.initialZ 0m
+param *.visualizer.packetDropVisualizer.displayPacketDrops true
+param *.visualizer.mediumVisualizer.displayCommunicationRanges true
+param *.visualizer.mediumVisualizer.displayInterferenceRanges true
+param **.bitrate 2Mbps
+param **.radio.transmitter.power 20mW
+param **.radio.receiver.sensitivity -85dBm
+param **.radio.receiver.snirThreshold 4dB
+param **.radio.receiver.bandwidth "22 MHz"
+param **.radioMedium.analogModel.typename "\"ScalarAnalogModel\""
+param **.errorModel.typename "\"Ieee80211YansErrorModel\""
+param **.radioMedium.backgroundNoise.power -110dBm
+param **.hasUdp true
+param **.*Host*.numApps 1
+param **.sinkNode.udp.typename "\"Udp\""
+param **.sinkNode.numApps 1
+param **.sinkNode.app[0].typename "\"UdpSink\""
+param **.sinkNode.app[0].localPort 1000
+param **.*Host[*].app[0].typename "\"UdpBasicApp\""
+param **.*Host[*].app[0].destAddresses "\"sinkNode\""
+param **.*Host[*].app[*].destPort 1000
+param **.*Host[*].app[*].messageLength 100B
+param **.*Host[*].app[*].sendInterval 1s
+param **.*Host[*].wlan[*].mac.dcf.channelAccess.pendingQueue.packetCapacity 100
+param **.*Host[*].wlan[*].mac.dcf.channelAccess.cwMax 1023
+param **.*Host[*].wlan[*].mac.dcf.channelAccess.cwMin 15
+param **.wlan[*].mac.dcf.recoveryProcedure.shortRetryLimit 7
+param **.wlan[*].mac.dcf.rtsPolicy.rtsThreshold 1024B
+param WiredAndWirelessHostsWithAP.num_wireless 3
+param WiredAndWirelessHostsWithAP.num_wired 3
+
+scalar WiredAndWirelessHostsWithAP.radioMedium.propagation "Arrival computation count" 33061000
+scalar WiredAndWirelessHostsWithAP.radioMedium "transmission count" 94460
+scalar WiredAndWirelessHostsWithAP.radioMedium "signal send count" 33061000
+scalar WiredAndWirelessHostsWithAP.radioMedium "reception computation count" 33061000
+scalar WiredAndWirelessHostsWithAP.radioMedium "interference computation count" 77028711
+scalar WiredAndWirelessHostsWithAP.radioMedium "reception decision computation count" 15789181
+scalar WiredAndWirelessHostsWithAP.radioMedium "listening decision computation count" 32989630
+scalar WiredAndWirelessHostsWithAP.radioMedium "reception cache hit" 97.098938241582
+attr unit %
+scalar WiredAndWirelessHostsWithAP.radioMedium "interference cache hit" 66.666666666667
+attr unit %
+scalar WiredAndWirelessHostsWithAP.radioMedium "noise cache hit" 0
+attr unit %
+scalar WiredAndWirelessHostsWithAP.radioMedium "snir cache hit" 50
+attr unit %
+scalar WiredAndWirelessHostsWithAP.radioMedium "reception decision cache hit" 50
+attr unit %
+scalar WiredAndWirelessHostsWithAP.radioMedium "reception result cache hit" 0
+attr unit %
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].lo[0].lo rcvdPkFromHl:count 0
+attr interpolationmode none
+attr source packetReceivedFromUpper
+attr title "packets received from higher layer, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].lo[0].lo rcvdPkFromHl:sum(packetBytes) 0
+attr interpolationmode none
+attr source packetReceivedFromUpper
+attr title "packets received from higher layer, sum(packetBytes)"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].lo[0].lo passedUpPk:count 0
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].lo[0].lo passedUpPk:sum(packetBytes) 0
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, sum(packetBytes)"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].agent dropConfirm:count 1
+attr title "dropped confirms, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].agent acceptConfirm:count 4
+attr title "accepted confirms, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].agent sentRequest:count 5
+attr title "sent requests, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetPopped:count 43
+attr interpolationmode none
+attr title "packet popped, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetPopped:sum(packetBytes) 6070
+attr interpolationmode none
+attr title "packet popped, sum(packetBytes)"
+statistic WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueingTime:histogram
+field count 43
+field mean 0.00069961955906977
+field stddev 0.0036547942612241
+field min 0
+field max 0.023861503649
+field sum 0.03008364104
+field sqrsum 0.00058206298953842
+attr interpolationmode none
+attr source queueingTime(packetPopped)
+attr title "queueing times, histogram"
+attr unit s
+bin	-inf	0
+bin	0	40
+bin	0.0005	0
+bin	0.001	1
+bin	0.0015	0
+bin	0.002	0
+bin	0.0025	0
+bin	0.003	1
+bin	0.0035	0
+bin	0.004	0
+bin	0.0045	0
+bin	0.005	0
+bin	0.0055	0
+bin	0.006	0
+bin	0.0065	0
+bin	0.007	0
+bin	0.0075	0
+bin	0.008	0
+bin	0.0085	0
+bin	0.009	0
+bin	0.0095	0
+bin	0.01	0
+bin	0.0105	0
+bin	0.011	0
+bin	0.0115	0
+bin	0.012	0
+bin	0.0125	0
+bin	0.013	0
+bin	0.0135	0
+bin	0.014	0
+bin	0.0145	0
+bin	0.015	0
+bin	0.0155	0
+bin	0.016	0
+bin	0.0165	0
+bin	0.017	0
+bin	0.0175	0
+bin	0.018	0
+bin	0.0185	0
+bin	0.019	0
+bin	0.0195	0
+bin	0.02	0
+bin	0.0205	0
+bin	0.021	0
+bin	0.0215	0
+bin	0.022	0
+bin	0.0225	0
+bin	0.023	0
+bin	0.0235	1
+bin	0.024	0
+bin	0.0245	0
+bin	0.025	0
+bin	0.0255	0
+bin	0.026	0
+bin	0.0265	0
+bin	0.027	0
+bin	0.0275	0
+bin	0.028	0
+bin	0.0285	0
+bin	0.029	0
+bin	0.0295	0
+bin	0.03	0
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueLength:max 1
+attr interpolationmode sample-hold
+attr source "count(packetPushed) - count(packetPopped) - count(packetRemoved) - count(packetDropped)"
+attr title "queue length, max"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueLength:timeavg 0.00075744772997595
+attr interpolationmode sample-hold
+attr source "count(packetPushed) - count(packetPopped) - count(packetRemoved) - count(packetDropped)"
+attr title "queue length, timeavg"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetPushed:count 43
+attr interpolationmode none
+attr title "packet pushed, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetPushed:sum(packetBytes) 6070
+attr interpolationmode none
+attr title "packet pushed, sum(packetBytes)"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetDropQueueOverflow:count 0
+attr interpolationmode none
+attr source packetDropReasonIsQueueOverflow(packetDropped)
+attr title "packet drops: queue overflow, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetDropQueueOverflow:sum(packetBytes) 0
+attr interpolationmode none
+attr source packetDropReasonIsQueueOverflow(packetDropped)
+attr title "packet drops: queue overflow, sum(packetBytes)"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetRemoved:count 0
+attr interpolationmode none
+attr title "packets removed, count"
+scalar WiredAndWirelessHostsWithAP.wirelessHost[0].wlan[0].mac.dcf.channelAccess.pendingQueue packetRemoved:sum(packetBytes) 0
+attr interpolationmode none
+attr title "packets removed, sum(packetBytes)"
+statistic WiredAndWirelessHostsWithAP.wirelessHost[0].wla

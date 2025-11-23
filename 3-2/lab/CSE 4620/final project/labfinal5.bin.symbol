@@ -1,0 +1,23 @@
+< THE SYMBOL TABLE >  labfinal5.bin  --  emu8086 assembler version: 4.08 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+START                    	00000     	-1        	LABEL     	(NOSEG)   
+MAIN_LOOP                	00009     	-1        	LABEL     	(NOSEG)   
+SHOW_DIGIT               	0004C     	-1        	LABEL     	(NOSEG)   
+L0                       	00077     	-1        	LABEL     	(NOSEG)   
+L1                       	0007A     	-1        	LABEL     	(NOSEG)   
+L2                       	0007D     	-1        	LABEL     	(NOSEG)   
+L3                       	00080     	-1        	LABEL     	(NOSEG)   
+L4                       	00083     	-1        	LABEL     	(NOSEG)   
+L5                       	00086     	-1        	LABEL     	(NOSEG)   
+L6                       	00089     	-1        	LABEL     	(NOSEG)   
+L7                       	0008C     	-1        	LABEL     	(NOSEG)   
+L8                       	0008F     	-1        	LABEL     	(NOSEG)   
+L9                       	00092     	-1        	LABEL     	(NOSEG)   
+DELAY                    	00095     	-1        	LABEL     	(NOSEG)   
+DELAY_LOOP               	00098     	-1        	LABEL     	(NOSEG)   
+===================================================================================================
+[ 8/28/2025  --  6:07:54 PM ] 
+< END >
+ 

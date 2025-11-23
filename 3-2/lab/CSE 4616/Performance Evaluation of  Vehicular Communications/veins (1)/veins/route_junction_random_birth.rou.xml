@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+<!-- Passenger Car Type -->
+<!-- Willingness for strategic lane changes --><!-- Willingness to help others change lanes --><!-- Lane change for speed gain --><!-- Tendency to keep right -->
+       
+<vType id="passenger_1" vClass="passenger" guiShape="passenger"
+       minGap="2.5" maxSpeed="6.0" accel="2.5" decel="3.5"
+       collisionMinGapFactor="0" carFollowModel="Krauss" sigma="0.99"
+       color="210,0,0"
+       laneChangeModel="LC2013" 
+       lcStrategic="0" lcSpeedGain="0"  lcKeepRight="0"  lcCooperative="0"/>  
+       
+<vType id="passenger_2" vClass="passenger" guiShape="passenger"
+       minGap="2.5" maxSpeed="5.0" accel="2.0" decel="3.0"
+       collisionMinGapFactor="0" carFollowModel="Krauss" sigma="0.99"
+	   laneChangeModel="LC2013" 
+	   color="0,165,0"
+       lcStrategic="0" lcSpeedGain="0" lcKeepRight="0" lcCooperative="0"/>   
+
+<vType id="passenger_3" vClass="passenger" guiShape="passenger"
+       minGap="2.5" maxSpeed="7.0" accel="2.5" decel="3.5"
+       collisionMinGapFactor="0" carFollowModel="Krauss" sigma="0.99"
+	   laneChangeModel="LC2013" 
+       lcStrategic="0" lcSpeedGain="0" lcKeepRight="0" lcCooperative="0"/> 
+
+<!-- Emergency Vehicle Type -->
+<vType id="emergency" vClass="emergency" guiShape="emergency"
+       minGap="2.5" maxSpeed="25.0" accel="3.5" decel="4.5"
+       emergencyDecel="6.0" length="5.0" width="1.8"
+       collisionMinGapFactor="0" carFollowModel="Krauss" sigma="0.5"
+       color="0,0,0"/>
+
+<!-- ==================== Straight Routes ==================== -->
+<route id="r_L_R" edges="E#L-X E#X-R" />   <!-- From Left (L) → Straight through intersection → Right (R) -->
+<route id="r_R_L" edges="E#R-X E#X-L" />   <!-- From Right (R) → Straight through intersection → Left (L) -->
+<route id="r_T_D" edges="E#T-X E#X-D"/>    <!-- From Top (T) → Straight through intersection → Down (D) -->
+<route id="r_D_T" edges="E#D-X E#X-T"/>    <!-- From Down (D) → Straight through intersection → Top (T) -->
+
+<!-- ==================== Left Turn Routes ==================== -->
+<route id="r_L_D" edges="E#L-X E#X-D" />   <!-- From Left (L) → Left turn at intersection → Down (D) -->
+<route id="r_R_T" edges="E#R-X E#X-T" />   <!-- From Right (R) → Left turn at intersection → Top (T) -->
+<route id="r_T_L" edges="E#T-X E#X-L"/>    <!-- From Top (T) → Left turn at intersection → Left (L) -->
+<route id="r_D_R" edges="E#D-X E#X-R"/>    <!-- From Down (D) → Left turn at intersection → Right (R) -->
+
+<!-- ==================== Right Turn Routes ==================== -->
+<route id="r_L_T" edges="E#L-X E#X-T" />   <!-- From Left (L) → Right turn at intersection → Top (T) -->
+<route id="r_R_D" edges="E#R-X E#X-D" />   <!-- From Right (R) → Right turn at intersection → Down (D) -->
+<route id="r_T_R" edges="E#T-X E#X-R"/>    <!-- From Top (T) → Right turn at intersection → Right (R) -->
+<route id="r_D_L" edges="E#D-X E#X-L"/>    <!-- From Down (D) → Right turn at intersection → Left (L) -->
+
+<!-- Flows -->
+<!-- ===================== Flow using 'probability' ===================== -->
+<!-- Probability of spawning a vehicle each second (50%) -->
+<flow id="F_prob_1" type="passenger_3" route="r_T_D"
+		begin="0" end="360"
+		probability="0.07"           
+		departLane="1"     		 
+		departSpeed="max"          
+		departPos="base"/>   
+<!-- Probability of spawning a vehicle each second (50%) -->
+<flow id="F_prob_2" type="passenger_2" route="r_D_R"
+		begin="0" end="360"
+		probability="0.04"           
+		departLane="0"      
+		departSpeed="max"          
+		departPos="base"/>    
+<!-- Probability of spawning a vehicle each second (50%) -->
+<flow id="F_prob_3" type="passenger_2" route="r_R_T"
+		begin="0" end="360"
+		probability="0.01"  
+		departLane="0"
+		departSpeed="max"
+		departPos="base"/>  
+<!-- Probability of spawning a vehicle each second (50%) -->
+<flow id="F_prob_4" type="passenger_3" route="r_R_L"
+		begin="0" end="360"
+		probability="0.01"  
+		departLane="1"
+		departSpeed="max"
+		departPos="base"/>  
+<!-- Probability of spawning a vehicle each second (50%) -->
+<flow id="F_prob_5" type="passenger_1" route="r_R_D"
+		begin="0" end="360"
+		probability="0.9"  
+		departLane="2"
+		departSpeed="max"
+		departPos="400"/>   						
+<!-- ===================== Flow using 'vehsPerHour' ===================== -->            
+<!-- e.g., Flow rate: 1800 vehicles/hour (~0.5 vehicle/sec) -->
+<flow id="F_vph" type="passenger_2" route="r_L_D"
+		begin="0" end="360"
+		vehsPerHour="1800"         
+		departLane="0"       
+		departSpeed="max"           
+		departPos="base"/>    
+</routes>
