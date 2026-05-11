@@ -1,0 +1,51 @@
+/* Test Case 1: Simple Declarations */
+int a = 10;
+float b = 3.14;
+int count = 0;
+
+/* Test Case 2: Character and String Constants */
+int ch = 'A';
+print("Hello, World!");
+
+/* Test Case 3: Mixed Expressions */
+if (a >= 5 && b <= 10.5) {
+    int result = a + b;
+    result *= 2;
+    result++;
+}
+
+/* Test Case 4: Relational and Logical */
+if (a == 10 || b != 3.14) {
+    a--;
+    b = b / 2.0;
+}
+
+/* Test Case 5: Bitwise Operators */
+int x = a & 0xFF;
+int y = x | 0x0F;
+int z = y ^ 0xAA;
+int w = ~z;
+int shifted = x << 2;
+shifted = shifted >> 1;
+
+/* Test Case 6: Multiple assignments and arithmetic */
+int sum = a + count;
+int diff = a - count;
+int prod = a * 3;
+int mod = a % 3;
+a += 5;
+a -= 2;
+a /= 2;
+
+/* Test Case 7: Nested conditions */
+if (a > 0) {
+    if (a < 100) {
+        print("In range");
+    } else {
+        print("Out of range");
+    }
+}
+
+// Single line comment - skipped
+int flag = 1;
+float pi = 3.14159;

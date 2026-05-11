@@ -1,0 +1,7 @@
+int main(){
+	string name="moushi";
+	int 9d = 123.;
+	/* this is a multiline
+	comment */
+	cout << "ok" << endl;
+}
