@@ -1,0 +1,7 @@
+int sum = a + count;
+int diff = a - count;
+int prod = a * 3;
+int mod = a % 3;
+a += 5;
+a -= 2;
+a /= 2;

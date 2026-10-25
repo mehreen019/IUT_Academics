@@ -1,0 +1,6 @@
+marks1=20.5
+marks2=10
+total=marks1+marks2
+sqrt(total)
+marks1*2+marks2
+sin(0)+marks1

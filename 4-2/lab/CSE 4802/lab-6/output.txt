@@ -1,0 +1,15 @@
+ADD T1, 5, 3                     
+MOV a, T1
+MUL T2, 3, 9
+MOV b, T2
+ADD T3, a, b
+MOV c, T3
+MUL T4, b, 10
+ADD T5, a, T4
+MOV c, T5
+ADD T6, b, a
+MUL T7, T6, d
+MOV c, T7
+SUB T8, b, a
+SUB T9, T8, c
+MOV e, T9

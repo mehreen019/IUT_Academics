@@ -1,0 +1,235 @@
+config.l:
+
+%{
+#include <stdio.h>
+#include "parser.tab.h"
+#include <stdlib.h>
+#include <string.h>
+
+extern int yylineno;
+%}
+
+%option yylineno
+
+%%
+
+[ \t\r]+                   ;
+\n                         { return NEWLINE; }
+
+[0-9]+(\.[0-9]+){3}        { yylval.str = strdup(yytext); return STRING; }
+-?[0-9]+\.[0-9]+           { yylval.dval = atof(yytext); return DOUBLE; }
+-?[0-9]+                   { yylval.dval = atof(yytext); return INTEGER; }
+[A-Za-z_][A-Za-z0-9_]*     { yylval.str = strdup(yytext); return IDENT; }
+
+"true"|"false"     { yylval.str = strdup(yytext); return BOOLEAN; }
+
+"["         return LEFT_BRACKET;
+"]"         return RIGHT_BRACKET;
+"="         return EQUALS;
+
+.           { return yytext[0]; }
+
+%%
+
+int yywrap(void) { return 1; }
+
+
+
+config.y:
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int yylex(void);
+void yyerror(const char *s);
+extern int yylineno;
+%}
+
+%union {
+    double dval;
+    char *str;
+}
+
+%token <str> STRING
+%token <dval> INTEGER DOUBLE
+%token <str> BOOLEAN IDENT
+%token LEFT_BRACKET RIGHT_BRACKET EQUALS NEWLINE
+
+%%
+
+ini:
+    sections
+    {
+        printf("Configuration file is syntactically valid.\n");
+    }
+  ;
+
+sections:
+    sections section
+    | section ;
+
+section:
+    LEFT_BRACKET IDENT RIGHT_BRACKET NEWLINE{
+        free($2);
+    }
+    members
+    | LEFT_BRACKET RIGHT_BRACKET NEWLINE{
+        yyerror("A section name is required");
+        YYERROR;
+    }
+    | LEFT_BRACKET IDENT NEWLINE{
+        yyerror("The section header is incomplete, Expected ']'");
+        free($2);
+        YYERROR;
+    }
+    | IDENT NEWLINE{
+        yyerror("A section name must begin with brackets: [section_name]");
+        free($1);
+        YYERROR;
+    }
+  ;
+
+members:
+    members member |
+    members NEWLINE |
+
+  ;
+
+member:
+    IDENT EQUALS value NEWLINE
+    {
+        free($1);
+    }
+    | IDENT EQUALS NEWLINE
+    {
+        yyerror("A configuration entry must contain a value");
+        free($1);
+        YYERROR;
+    }
+    | EQUALS value NEWLINE
+    {
+        yyerror("A configuration entry must contain a key");
+        YYERROR;
+    }
+    | IDENT value NEWLINE
+    {
+        yyerror("The expected form is: key=value");
+        free($1);
+        YYERROR;
+    }
+  ;
+
+value:
+    IDENT       { free($1); }
+  | STRING       { free($1); }
+  | INTEGER
+  | DOUBLE
+  | BOOLEAN      { free($1); }
+  ;
+
+%%
+
+void yyerror(const char *s) {
+    printf("Syntax Error at line %d: %s\n", yylineno, s);
+}
+
+int main(void) {
+    int result = yyparse();
+    return result;
+}
+
+
+
+
+input-output:
+input1:
+[Database]
+host=localhost
+port=3306
+username=admin
+
+output1:
+Configuration file is syntactically valid.
+
+input2:
+[Server]
+host=192.168.1.10
+port=8080
+timeout=30.5
+enabled=true
+
+output2:
+Configuration file is syntactically valid.
+
+input3:
+[Application]
+name=CompilerLab
+version=2.5
+debug=false
+
+[Database]
+host=localhost
+port=3306
+
+output3:
+Configuration file is syntactically valid.
+
+input4:
+[Database
+host=localhost
+port=3306
+username=admin
+
+output4:
+Syntax Error at line 2: The section header is incomplete, Expected ']'
+
+input5:
+[]
+host=localhost
+port=3306
+username=admin
+
+output5:
+Syntax Error at line 2: A section name is required
+
+input6:
+[Database]
+host localhost
+port=3306
+username=admin
+
+output6:
+Syntax Error at line 3: The expected form is: key=value
+
+input7:
+[Database]
+host=
+port=3306
+username=admin
+
+output7:
+Syntax Error at line 3: A configuration entry must contain a value
+
+input8:
+[Database]
+=localhost
+port=3306
+username=admin
+
+output8:
+Syntax Error at line 3: A configuration entry must contain a key
+
+input9:
+Database
+host=localhost
+port=3306
+username=admin
+
+output9:
+Syntax Error at line 1: syntax error
+
+
+Couldn't finish:
+input9 doesn't output the correct error, it's just the generalized one. i tried outputting the correct error but ultimately couldn't despite trying a lot. also the invalid Boolean value was not reproducible as there is no way to discern between the Boolean and string values properly
+

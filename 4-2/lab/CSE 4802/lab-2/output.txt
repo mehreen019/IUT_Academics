@@ -1,0 +1,57 @@
+<int, KEYWORD>
+<sum, IDENTIFIER>
+<=, ASSIGNMENT_OP>
+<a, IDENTIFIER>
+<+, ARITHMETIC_OP>
+<count, IDENTIFIER>
+<;, DELIMITER>
+<int, KEYWORD>
+<diff, IDENTIFIER>
+<=, ASSIGNMENT_OP>
+<a, IDENTIFIER>
+<-, ARITHMETIC_OP>
+<count, IDENTIFIER>
+<;, DELIMITER>
+<int, KEYWORD>
+<prod, IDENTIFIER>
+<=, ASSIGNMENT_OP>
+<a, IDENTIFIER>
+<*, ARITHMETIC_OP>
+<3, INT_CONST>
+<;, DELIMITER>
+<int, KEYWORD>
+<mod, IDENTIFIER>
+<=, ASSIGNMENT_OP>
+<a, IDENTIFIER>
+<%, ARITHMETIC_OP>
+<3, INT_CONST>
+<;, DELIMITER>
+<a, IDENTIFIER>
+<+=, ASSIGNMENT_OP>
+<5, INT_CONST>
+<;, DELIMITER>
+<a, IDENTIFIER>
+<-=, ASSIGNMENT_OP>
+<2, INT_CONST>
+<;, DELIMITER>
+<a, IDENTIFIER>
+</=, ASSIGNMENT_OP>
+<2, INT_CONST>
+<;, DELIMITER>
+
+Total Tokens: 40
+Keywords: 4
+Identifiers: 13
+Constants: 5
+  Integer Constants: 5
+  Float Constants: 0
+  Character Constants: 0
+  String Constants: 0
+Operators: 11
+  Arithmetic: 4
+  Relational: 0
+  Logical: 0
+  Bitwise: 0
+  Assignment: 7
+  Increment/Decrement: 0
+Delimiters: 7

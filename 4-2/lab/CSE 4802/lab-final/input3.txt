@@ -1,0 +1,8 @@
+[Application]
+name=CompilerLab
+version=2.5
+debug=false
+
+[Database]
+host=localhost
+port=3306
